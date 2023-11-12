@@ -29,7 +29,7 @@ import com.yveskalume.herofeeds.android.ui.theme.HeroFeedTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HeroItem(modifier: Modifier = Modifier) {
+fun CreatorItem(modifier: Modifier = Modifier) {
     Card(onClick = { /*TODO*/ }, modifier = modifier) {
         Column(
             modifier = Modifier
@@ -94,8 +94,8 @@ fun HeroItem(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-private fun HeroItemPreview() {
+private fun CreatorItemPreview() {
     HeroFeedTheme {
-        HeroItem()
+        CreatorItem()
     }
 }

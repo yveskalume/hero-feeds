@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yveskalume.herofeeds.android.ui.components.HeroItem
+import com.yveskalume.herofeeds.android.ui.components.CreatorItem
 
 @Composable
 fun HomeScreen() {
@@ -28,7 +28,7 @@ fun HomeScreen() {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(16) {
-                HeroItem(modifier = Modifier.fillMaxWidth())
+                CreatorItem(modifier = Modifier.fillMaxWidth())
             }
         }
     }
