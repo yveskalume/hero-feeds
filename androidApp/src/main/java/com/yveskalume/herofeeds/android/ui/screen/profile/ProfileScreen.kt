@@ -33,9 +33,18 @@ import kotlinx.coroutines.launch
 import moe.tlaster.nestedscrollview.VerticalNestedScrollView
 import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
 
+@Composable
+fun ProfileRoute(
+    onNavigateBack: () -> Unit
+) {
+    ProfileScreen(onNavigateBack = onNavigateBack)
+}
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    onNavigateBack: () -> Unit
+) {
 
     val pagerState = rememberPagerState { 3 }
 
@@ -45,7 +54,7 @@ fun ProfileScreen() {
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = onNavigateBack) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
                     }
                 },
@@ -102,7 +111,7 @@ fun ProfileScreen() {
                 }
                 HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) {
 
-                    when(pagerState.currentPage) {
+                    when (pagerState.currentPage) {
                         0 -> {
                             LazyColumn(
                                 state = rememberLazyListState(),
@@ -111,9 +120,11 @@ fun ProfileScreen() {
                             ) {
 
                                 items(16) {
-                                    XPostItem(modifier = Modifier
-                                        .animateItemPlacement()
-                                        .padding(horizontal = 16.dp))
+                                    XPostItem(
+                                        modifier = Modifier
+                                            .animateItemPlacement()
+                                            .padding(horizontal = 16.dp)
+                                    )
                                 }
                             }
                         }
@@ -163,6 +174,6 @@ fun ProfileScreen() {
 @Composable
 fun ProfileScreenPreview() {
     MaterialTheme {
-        ProfileScreen()
+        ProfileScreen(onNavigateBack = {})
     }
 }

@@ -21,9 +21,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+@Composable
+fun AddCreatorRoute(
+    onNavigateBack: () -> Unit
+) {
+    AddCreatorScreen(onNavigateBack = onNavigateBack)
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddCreatorScreen() {
+fun AddCreatorScreen(
+    onNavigateBack: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -103,6 +112,6 @@ fun AddCreatorScreen() {
 @Composable
 private fun AddCreatorScreenPreview() {
     MaterialTheme {
-        AddCreatorScreen()
+        AddCreatorScreen(onNavigateBack = {})
     }
 }

@@ -29,8 +29,8 @@ import com.yveskalume.herofeeds.android.ui.theme.HeroFeedTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreatorItem(modifier: Modifier = Modifier) {
-    Card(onClick = { /*TODO*/ }, modifier = modifier) {
+fun CreatorItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Card(onClick = onClick, modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -96,6 +96,6 @@ fun CreatorItem(modifier: Modifier = Modifier) {
 @Composable
 private fun CreatorItemPreview() {
     HeroFeedTheme {
-        CreatorItem()
+        CreatorItem(onClick = {})
     }
 }

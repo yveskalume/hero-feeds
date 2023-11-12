@@ -48,5 +48,7 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
 
     implementation(libs.nestedScrollView)
+    implementation(libs.androidx.navigation.compose)
+
 
 }
