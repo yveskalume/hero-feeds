@@ -1,4 +1,4 @@
-package com.yveskalume.herofeeds.android.ui.screen
+package com.yveskalume.herofeeds.android.ui.screen.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
