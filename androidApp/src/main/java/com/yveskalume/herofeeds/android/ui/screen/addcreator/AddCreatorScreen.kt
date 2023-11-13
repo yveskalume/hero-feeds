@@ -37,7 +37,7 @@ fun AddCreatorScreen(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = onNavigateBack) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
                     }
                 },
