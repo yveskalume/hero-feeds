@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.sqlDelight)
 }
 
 kotlin {
@@ -25,8 +26,16 @@ kotlin {
     }
 
     sourceSets {
+        androidMain.dependencies {
+            implementation(libs.sqlDelight.android.driver)
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
+        }
+        iosMain.dependencies {
+            implementation(libs.sqlDelight.native.driver)
+        }
         commonMain.dependencies {
-            //put your multiplatform dependencies here
+            implementation(libs.sqlDelight.coroutines.extensions)
+            implementation(libs.koin.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -39,5 +48,13 @@ android {
     compileSdk = 34
     defaultConfig {
         minSdk = 33
+    }
+}
+
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("com.yveskalume.herofeeds.data.local")
+        }
     }
 }

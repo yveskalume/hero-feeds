@@ -50,5 +50,6 @@ dependencies {
     implementation(libs.nestedScrollView)
     implementation(libs.androidx.navigation.compose)
 
-
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
 }

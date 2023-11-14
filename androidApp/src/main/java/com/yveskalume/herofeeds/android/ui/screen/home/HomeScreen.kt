@@ -4,15 +4,18 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -21,11 +24,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -33,23 +38,32 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yveskalume.herofeeds.android.ui.components.CreatorItem
+import com.yveskalume.herofeeds.data.local.Creator
+import com.yveskalume.herofeeds.ui.home.HomeUiState
+import com.yveskalume.herofeeds.ui.home.HomeViewModel
+import org.koin.androidx.compose.koinViewModel
+
 
 @Composable
 fun HomeRoute(
-    onCreatorClick: () -> Unit,
+    viewModel: HomeViewModel = koinViewModel(),
+    onCreatorClick: (Long) -> Unit,
     onAddClick: () -> Unit
 ) {
-    HomeScreen(onCreatorClick = onCreatorClick, onAddClick = onAddClick)
+    val uiState by viewModel.uiState.collectAsState()
+
+    HomeScreen(uiState = uiState, onCreatorClick = onCreatorClick, onAddClick = onAddClick)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeScreen(
-    onCreatorClick: () -> Unit,
+    uiState: HomeUiState,
+    onCreatorClick: (Long) -> Unit,
     onAddClick: () -> Unit
 ) {
-    val lazyStaggeredGridState = rememberLazyStaggeredGridState()
 
     var isFabVisible by rememberSaveable { mutableStateOf(true) }
 
@@ -87,20 +101,63 @@ private fun HomeScreen(
             }
         }
     ) { contentPadding ->
-        LazyVerticalStaggeredGrid(
-            state = lazyStaggeredGridState,
+
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(contentPadding)
-                .nestedScroll(nestedScrollConnection),
-            columns = StaggeredGridCells.Fixed(2),
-            contentPadding = PaddingValues(8.dp),
-            verticalItemSpacing = 8.dp,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(contentPadding),
+            contentAlignment = Alignment.Center
         ) {
-            items(16) {
-                CreatorItem(onClick = onCreatorClick, modifier = Modifier.fillMaxWidth())
+
+            when (uiState) {
+                is HomeUiState.Error -> {
+                    Text(text = uiState.message)
+                }
+
+                HomeUiState.Loading -> {
+                    CircularProgressIndicator()
+                }
+
+                is HomeUiState.Success -> {
+                    HomeContent(
+                        creators = uiState.creators,
+                        onCreatorClick = onCreatorClick,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(contentPadding)
+                            .nestedScroll(nestedScrollConnection)
+                    )
+                }
             }
+
+        }
+
+    }
+}
+
+@Composable
+fun HomeContent(
+    creators: List<Creator>,
+    onCreatorClick: (Long) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val lazyStaggeredGridState = rememberLazyStaggeredGridState()
+
+    LazyVerticalStaggeredGrid(
+        state = lazyStaggeredGridState,
+        modifier = modifier,
+        columns = StaggeredGridCells.Fixed(2),
+        contentPadding = PaddingValues(8.dp),
+        verticalItemSpacing = 8.dp,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(items = creators, key = { it.id }) { creator ->
+            CreatorItem(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    onCreatorClick(creator.id)
+                }
+            )
         }
     }
 }
@@ -110,6 +167,6 @@ private fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     MaterialTheme {
-        HomeScreen(onCreatorClick = {}, onAddClick = {})
+        HomeScreen(uiState = HomeUiState.Loading, onCreatorClick = {}, onAddClick = {})
     }
 }
