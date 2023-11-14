@@ -9,4 +9,6 @@ class CreatorRepository(private val localDataSource: CreatorLocalDataSource) {
     fun getAll(): Flow<List<Creator>> = localDataSource.getAll()
 
     suspend fun insert(creator: Creator) = localDataSource.insert(creator)
+
+    fun getCreator(id: Long): Flow<Creator> = localDataSource.getCreator(id)
 }

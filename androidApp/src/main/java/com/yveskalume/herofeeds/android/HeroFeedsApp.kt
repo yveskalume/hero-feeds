@@ -4,6 +4,7 @@ import android.app.Application
 import com.yveskalume.herofeeds.di.KoinWrapper
 import com.yveskalume.herofeeds.ui.addcreator.AddCreatorViewModel
 import com.yveskalume.herofeeds.ui.home.HomeViewModel
+import com.yveskalume.herofeeds.ui.profile.ProfileViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -16,6 +17,7 @@ class HeroFeedsApp : Application() {
             vmModule = module {
                 viewModel { HomeViewModel(get()) }
                 viewModel { AddCreatorViewModel(get()) }
+                viewModel { ProfileViewModel(get()) }
             },
             appDeclaration = {
                 androidLogger()

@@ -19,9 +19,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yveskalume.herofeeds.android.R
+import com.yveskalume.herofeeds.data.local.Creator
 
 @Composable
-fun HeaderSection(modifier: Modifier = Modifier) {
+fun HeaderSection(
+    creator: Creator,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier.wrapContentHeight(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -40,8 +44,8 @@ fun HeaderSection(modifier: Modifier = Modifier) {
             verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.wrapContentHeight()) {
-                Text(text = "Yves Kalume", style = MaterialTheme.typography.titleLarge)
-                Text(text = "Android Developer", style = MaterialTheme.typography.bodyMedium)
+                Text(text = creator.name, style = MaterialTheme.typography.titleLarge)
+                Text(text = creator.bio, style = MaterialTheme.typography.bodyMedium)
             }
 
             OutlinedButton(onClick = { /*TODO*/ }) {
@@ -55,6 +59,16 @@ fun HeaderSection(modifier: Modifier = Modifier) {
 @Composable
 private fun HeaderSectionPreview() {
     MaterialTheme {
-        HeaderSection()
+        HeaderSection(
+            creator = Creator(
+                id = 1,
+                photo = null,
+                name = "Yves Kalume",
+                bio = "Android Developer",
+                medium = "https://medium.com/@yveskalume",
+                twitter = "https://twitter.com/yveskalume",
+                hashnode = "https://yveskalume.hashnode.dev/"
+            )
+        )
     }
 }

@@ -13,3 +13,6 @@ INSERT INTO creator(name,bio,photo,twitter,hashnode,medium) VALUES (?,?,?,?,?,?)
 
 getAll:
 SELECT * FROM creator;
+
+getCreatorById:
+SELECT * FROM creator WHERE id = ?;
