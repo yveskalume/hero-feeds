@@ -1,13 +1,16 @@
 package com.yveskalume.herofeeds.android.ui.screen.addcreator
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,22 +20,68 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.yveskalume.herofeeds.ui.addcreator.AddCreatorUiState
+import com.yveskalume.herofeeds.ui.addcreator.AddCreatorViewModel
+import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun AddCreatorRoute(
+    viewModel: AddCreatorViewModel = getViewModel(),
     onNavigateBack: () -> Unit
 ) {
-    AddCreatorScreen(onNavigateBack = onNavigateBack)
+    val uiState by viewModel.uiState.collectAsState()
+    AddCreatorScreen(
+        uiState = uiState,
+        onNavigateBack = onNavigateBack,
+        onSubmit = viewModel::addCreator
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddCreatorScreen(
-    onNavigateBack: () -> Unit
+    uiState: AddCreatorUiState,
+    onNavigateBack: () -> Unit,
+    onSubmit: (name: String, bio: String, twitter: String, hashnode: String, medium: String) -> Unit
 ) {
+
+    LaunchedEffect(uiState) {
+        if (uiState is AddCreatorUiState.Success) {
+            onNavigateBack()
+        }
+    }
+
+
+    var name by remember {
+        mutableStateOf("")
+    }
+
+    var bio by remember {
+        mutableStateOf("")
+    }
+
+    var twitter by remember {
+        mutableStateOf("")
+    }
+
+    var hashnode by remember {
+        mutableStateOf("")
+    }
+
+    var medium by remember {
+        mutableStateOf("")
+    }
+
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -54,18 +103,18 @@ fun AddCreatorScreen(
         ) {
             Text(text = "Name")
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = name,
+                onValueChange = { name = it },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(text = "Yves Kalume")
                 }
             )
 
-            Text(text = "Description")
+            Text(text = "Bio")
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = bio,
+                onValueChange = { bio = it },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(text = "Android Developer")
@@ -73,8 +122,8 @@ fun AddCreatorScreen(
 
             Text(text = "X (Twitter)")
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = twitter,
+                onValueChange = { twitter = it },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(text = "kalumeyves")
@@ -83,8 +132,8 @@ fun AddCreatorScreen(
 
             Text(text = "Hashnode")
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = hashnode,
+                onValueChange = { hashnode = it },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(text = "kalume.hashnode.dev")
@@ -93,16 +142,28 @@ fun AddCreatorScreen(
 
             Text(text = "Medium")
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = medium,
+                onValueChange = { medium = it },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(text = "medium.com/@yveskalume")
                 }
             )
 
-            Button(onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth()) {
+            Button(
+                enabled = name.isNotBlank()
+                        && bio.isNotBlank()
+                        && (twitter.isNotBlank() || hashnode.isNotBlank() || medium.isNotBlank())
+                        && uiState !is AddCreatorUiState.Loading,
+                onClick = {
+                    onSubmit(name, bio, twitter, hashnode, medium)
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(text = "Save")
+                AnimatedVisibility(visible = uiState is AddCreatorUiState.Loading) {
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                }
             }
         }
     }
@@ -112,6 +173,9 @@ fun AddCreatorScreen(
 @Composable
 private fun AddCreatorScreenPreview() {
     MaterialTheme {
-        AddCreatorScreen(onNavigateBack = {})
+        AddCreatorScreen(
+            uiState = AddCreatorUiState.Idle,
+            onNavigateBack = {},
+            onSubmit = { _, _, _, _, _ -> })
     }
 }

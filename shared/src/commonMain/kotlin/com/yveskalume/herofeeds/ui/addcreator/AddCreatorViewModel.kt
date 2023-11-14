@@ -11,26 +11,26 @@ import kotlinx.coroutines.launch
 class AddCreatorViewModel(private val creatorRepository: CreatorRepository) : BaseViewModel() {
 
 
-    private val _uiState: MutableStateFlow<AddCreatorState> = MutableStateFlow(AddCreatorState.Idle)
-    val uiState: StateFlow<AddCreatorState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<AddCreatorUiState> = MutableStateFlow(AddCreatorUiState.Idle)
+    val uiState: StateFlow<AddCreatorUiState> = _uiState.asStateFlow()
 
     fun addCreator(name: String, bio: String, twitter: String, hashnode: String, medium: String) {
         coroutineScope.launch {
-            _uiState.emit(AddCreatorState.Loading)
+            _uiState.emit(AddCreatorUiState.Loading)
             try {
                 val creator = Creator(
                     id = 0, name = name,
                     bio = bio,
-                    twitter = twitter,
-                    hashnode = hashnode,
-                    medium = medium,
+                    twitter = twitter.ifBlank { null },
+                    hashnode = hashnode.ifBlank { null },
+                    medium = medium.ifBlank { null },
                     photo = null
                 )
 
                 creatorRepository.insert(creator)
-                _uiState.emit(AddCreatorState.Success)
+                _uiState.emit(AddCreatorUiState.Success)
             } catch (e: Exception) {
-                _uiState.emit(AddCreatorState.Error(e.message ?: "An error occured"))
+                _uiState.emit(AddCreatorUiState.Error(e.message ?: "An error occured"))
             }
         }
     }

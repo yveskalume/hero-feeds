@@ -26,10 +26,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yveskalume.herofeeds.android.R
 import com.yveskalume.herofeeds.android.ui.theme.HeroFeedTheme
+import com.yveskalume.herofeeds.data.local.Creator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreatorItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun CreatorItem(
+    creator: Creator,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Card(onClick = onClick, modifier = modifier) {
         Column(
             modifier = Modifier
@@ -47,13 +52,13 @@ fun CreatorItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
                 contentScale = ContentScale.Crop
             )
             Text(
-                text = "Yves Kalume",
+                text = creator.name,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleMedium
             )
 
             Text(
-                text = "Android Developer",
+                text = creator.bio,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodySmall
             )
@@ -68,25 +73,31 @@ fun CreatorItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
                 ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_medium),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                    tint = Color.Unspecified
-                )
+                if (creator.medium != null) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_medium),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = Color.Unspecified
+                    )
+                }
 
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_x),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp)
-                )
+                if (creator.twitter != null) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_x),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
 
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_hashnode),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                    tint = Color.Unspecified
-                )
+                if (creator.hashnode != null) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_hashnode),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = Color.Unspecified
+                    )
+                }
             }
         }
     }
@@ -96,6 +107,16 @@ fun CreatorItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 private fun CreatorItemPreview() {
     HeroFeedTheme {
-        CreatorItem(onClick = {})
+        CreatorItem(
+            onClick = {}, creator = Creator(
+                id = 1,
+                photo = null,
+                name = "Yves Kalume",
+                bio = "Android Developer",
+                medium = "https://medium.com/@yveskalume",
+                twitter = "https://twitter.com/yveskalume",
+                hashnode = "https://yveskalume.hashnode.dev/"
+            )
+        )
     }
 }

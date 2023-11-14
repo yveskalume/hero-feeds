@@ -38,17 +38,16 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yveskalume.herofeeds.android.ui.components.CreatorItem
 import com.yveskalume.herofeeds.data.local.Creator
 import com.yveskalume.herofeeds.ui.home.HomeUiState
 import com.yveskalume.herofeeds.ui.home.HomeViewModel
-import org.koin.androidx.compose.koinViewModel
+import org.koin.androidx.compose.getViewModel
 
 
 @Composable
 fun HomeRoute(
-    viewModel: HomeViewModel = koinViewModel(),
+    viewModel: HomeViewModel = getViewModel(),
     onCreatorClick: (Long) -> Unit,
     onAddClick: () -> Unit
 ) {
@@ -86,7 +85,7 @@ private fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Creators") }
+                title = { Text(text = "Creators") },
             )
         },
         floatingActionButton = {
@@ -124,7 +123,6 @@ private fun HomeScreen(
                         onCreatorClick = onCreatorClick,
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(contentPadding)
                             .nestedScroll(nestedScrollConnection)
                     )
                 }
@@ -153,6 +151,7 @@ fun HomeContent(
     ) {
         items(items = creators, key = { it.id }) { creator ->
             CreatorItem(
+                creator = creator,
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     onCreatorClick(creator.id)
