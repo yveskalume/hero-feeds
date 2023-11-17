@@ -9,10 +9,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
@@ -140,15 +139,13 @@ fun HomeContent(
     onCreatorClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val lazyStaggeredGridState = rememberLazyStaggeredGridState()
+    val lazyStaggeredGridState = rememberLazyListState()
 
-    LazyVerticalStaggeredGrid(
+    LazyColumn(
         state = lazyStaggeredGridState,
         modifier = modifier,
-        columns = StaggeredGridCells.Fixed(2),
-        contentPadding = PaddingValues(8.dp),
-        verticalItemSpacing = 8.dp,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(items = creators, key = { it.id }) { creator ->
             CreatorItem(

@@ -19,6 +19,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -36,8 +37,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yveskalume.herofeeds.android.ui.components.HashnodePostItem
-import com.yveskalume.herofeeds.android.ui.components.MediumPostItem
-import com.yveskalume.herofeeds.android.ui.components.XPostItem
 import com.yveskalume.herofeeds.data.model.hashnode.HashNodeRemotePost
 import com.yveskalume.herofeeds.ui.profile.ProfileUiState
 import com.yveskalume.herofeeds.ui.profile.ProfileViewModel
@@ -149,13 +148,20 @@ private fun ProfileContent(
 
                     when (pagerState.currentPage) {
                         0 -> {
+                            if (uiState.posts.isEmpty()) {
+                                Text(
+                                    text = "No posts yet",
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                             LazyColumn(
                                 state = rememberLazyListState(),
                                 verticalArrangement = Arrangement.spacedBy(8.dp),
                                 contentPadding = PaddingValues(vertical = 16.dp)
                             ) {
 
-                                items(items = uiState.posts, key = { it.id }) {post ->
+                                items(items = uiState.posts, key = { it.id }) { post ->
                                     if (post is HashNodeRemotePost) {
                                         HashnodePostItem(
                                             post = post,
@@ -179,9 +185,7 @@ private fun ProfileContent(
                 }
             }
         } else if (uiState.arePostsLoading) {
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
+            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
     }
 }

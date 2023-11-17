@@ -1,12 +1,8 @@
 package com.yveskalume.herofeeds.android
 
-import android.icu.text.SimpleDateFormat
 import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
 
 fun String.getFormattedDate(): String {
 
