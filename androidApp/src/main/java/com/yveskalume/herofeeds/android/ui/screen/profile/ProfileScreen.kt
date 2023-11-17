@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -20,7 +21,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.yveskalume.herofeeds.android.ui.components.HashnodePostItem
 import com.yveskalume.herofeeds.android.ui.components.MediumPostItem
 import com.yveskalume.herofeeds.android.ui.components.XPostItem
-import com.yveskalume.herofeeds.data.local.Creator
+import com.yveskalume.herofeeds.data.model.hashnode.HashNodeRemotePost
 import com.yveskalume.herofeeds.ui.profile.ProfileUiState
 import com.yveskalume.herofeeds.ui.profile.ProfileViewModel
 import kotlinx.coroutines.launch
@@ -85,18 +85,12 @@ fun ProfileScreen(
                 .padding(contentPadding),
             contentAlignment = Alignment.Center
         ) {
-            when (uiState) {
-                is ProfileUiState.Error -> {
-                    Text(text = uiState.message, textAlign = TextAlign.Center)
-                }
-
-                ProfileUiState.Loading -> {
-                    CircularProgressIndicator()
-                }
-
-                is ProfileUiState.Success -> {
-                    ProfileContent(creator = uiState.creator)
-                }
+            if (uiState.isCreatorLoading) {
+                CircularProgressIndicator()
+            } else if (uiState.errorMessage != null) {
+                Text(text = uiState.errorMessage!!, textAlign = TextAlign.Center)
+            } else {
+                ProfileContent(uiState = uiState)
             }
         }
     }
@@ -105,7 +99,7 @@ fun ProfileScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ProfileContent(
-    creator: Creator
+    uiState: ProfileUiState
 ) {
 
 
@@ -119,105 +113,76 @@ private fun ProfileContent(
         modifier = Modifier.fillMaxWidth(),
         state = nestedScrollViewState,
         header = {
-            HeaderSection(creator = creator,modifier = Modifier.padding(16.dp))
+            if (uiState.creator != null) {
+                HeaderSection(creator = uiState.creator!!, modifier = Modifier.padding(16.dp))
+            }
         }
     ) {
-        Column {
-            TabRow(
-                selectedTabIndex = pagerState.currentPage,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Tab(
-                    selected = pagerState.currentPage == 0,
-                    onClick = {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(0)
-                        }
-                    },
-                    text = { Text(text = "Feed") }
-                )
-
-
-                Tab(
-                    selected = pagerState.currentPage == 1,
-                    onClick = {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(1)
-                        }
-                    },
-                    text = { Text(text = "Sources") }
-                )
-            }
-            HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) {
-
-                when (pagerState.currentPage) {
-                    0 -> {
-                        LazyColumn(
-                            state = rememberLazyListState(),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(vertical = 16.dp)
-                        ) {
-
-                            items(2) {
-                                XPostItem(
-                                    modifier = Modifier
-                                        .animateItemPlacement()
-                                        .padding(horizontal = 16.dp)
-                                )
+        if (!uiState.arePostsLoading && uiState.errorMessage == null) {
+            Column {
+                TabRow(
+                    selectedTabIndex = pagerState.currentPage,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Tab(
+                        selected = pagerState.currentPage == 0,
+                        onClick = {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(0)
                             }
+                        },
+                        text = { Text(text = "Feed") }
+                    )
 
-                            items(1) {
-                                HashnodePostItem(
-                                    modifier = Modifier
-                                        .animateItemPlacement()
-                                        .fillMaxWidth()
-                                        .padding(
-                                            horizontal = 16.dp,
-                                            vertical = 8.dp
+
+                    Tab(
+                        selected = pagerState.currentPage == 1,
+                        onClick = {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(1)
+                            }
+                        },
+                        text = { Text(text = "Sources") }
+                    )
+                }
+                HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) {
+
+                    when (pagerState.currentPage) {
+                        0 -> {
+                            LazyColumn(
+                                state = rememberLazyListState(),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                contentPadding = PaddingValues(vertical = 16.dp)
+                            ) {
+
+                                items(items = uiState.posts, key = { it.id }) {post ->
+                                    if (post is HashNodeRemotePost) {
+                                        HashnodePostItem(
+                                            post = post,
+                                            modifier = Modifier
+                                                .animateItemPlacement()
+                                                .fillMaxWidth()
+                                                .padding(
+                                                    horizontal = 16.dp,
+                                                    vertical = 8.dp
+                                                )
                                         )
-                                )
-                            }
-
-                            items(1) {
-                                XPostItem(
-                                    modifier = Modifier
-                                        .animateItemPlacement()
-                                        .padding(horizontal = 16.dp)
-                                )
-                            }
-
-                            items(1) {
-                                MediumPostItem(
-                                    modifier = Modifier
-                                        .animateItemPlacement()
-                                        .fillMaxWidth()
-                                        .padding(
-                                            horizontal = 16.dp,
-                                            vertical = 8.dp
-                                        )
-                                )
-                            }
-                            items(1) {
-                                HashnodePostItem(
-                                    modifier = Modifier
-                                        .animateItemPlacement()
-                                        .fillMaxWidth()
-                                        .padding(
-                                            horizontal = 16.dp,
-                                            vertical = 8.dp
-                                        )
-                                )
+                                    }
+                                }
                             }
                         }
-                    }
 
-                    1 -> {
+                        1 -> {
 
+                        }
                     }
                 }
             }
+        } else if (uiState.arePostsLoading) {
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
         }
-
     }
 }
 
@@ -225,6 +190,6 @@ private fun ProfileContent(
 @Composable
 fun ProfileScreenPreview() {
     MaterialTheme {
-        ProfileScreen(uiState = ProfileUiState.Loading, onNavigateBack = {})
+        ProfileScreen(uiState = ProfileUiState(), onNavigateBack = {})
     }
 }

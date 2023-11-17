@@ -17,7 +17,7 @@ class HeroFeedsApp : Application() {
             vmModule = module {
                 viewModel { HomeViewModel(get()) }
                 viewModel { AddCreatorViewModel(get()) }
-                viewModel { ProfileViewModel(get()) }
+                viewModel { ProfileViewModel(get(),get()) }
             },
             appDeclaration = {
                 androidLogger()

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.sqlDelight)
+    alias(libs.plugins.apollographql)
 }
 
 kotlin {
@@ -36,6 +37,8 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.sqlDelight.coroutines.extensions)
             implementation(libs.koin.core)
+            implementation(libs.apollo.runtime.kotlin)
+            api(libs.logging)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -57,4 +60,9 @@ sqldelight {
             packageName.set("com.yveskalume.herofeeds.data.local")
         }
     }
+}
+
+apollo {
+    generateKotlinModels.set(true)
+    packageNamesFromFilePaths()
 }
