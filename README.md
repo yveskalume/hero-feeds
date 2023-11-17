@@ -15,3 +15,12 @@ is to use RSS feeds),Dev.to, etc.
 
 For platforms without an API neither RSS feeds, We can create a web crawler to fetch the posts.
 
+## Features
+
+- [x] Add creator
+- [x] Fetch hashnode posts
+- [] Edit creator
+- [] Delete creator
+- [] Fetch medium posts
+- [] Fetch dev.to posts
+
