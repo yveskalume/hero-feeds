@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.sqlDelight)
     alias(libs.plugins.apollographql)
+    kotlin("plugin.serialization").version("1.9.20")
 }
 
 kotlin {
@@ -30,14 +31,23 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.sqlDelight.android.driver)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
+            implementation(libs.ktor.client.android)
         }
         iosMain.dependencies {
             implementation(libs.sqlDelight.native.driver)
+            implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
             implementation(libs.sqlDelight.coroutines.extensions)
             implementation(libs.koin.core)
             implementation(libs.apollo.runtime.kotlin)
+
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.logging)
+
             api(libs.logging)
         }
         commonTest.dependencies {

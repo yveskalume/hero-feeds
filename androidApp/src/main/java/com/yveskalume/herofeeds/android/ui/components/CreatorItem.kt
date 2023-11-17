@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -81,15 +79,6 @@ fun CreatorItem(
                             painter = painterResource(id = R.drawable.ic_medium),
                             contentDescription = null,
                             modifier = Modifier.size(24.dp),
-                            tint = Color.Unspecified
-                        )
-                    }
-
-                    if (creator.twitter != null) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_x),
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp)
                         )
                     }
 
@@ -118,7 +107,6 @@ private fun CreatorItemPreview() {
                 name = "Yves Kalume",
                 bio = "Android Developer",
                 medium = "https://medium.com/@yveskalume",
-                twitter = "https://twitter.com/yveskalume",
                 hashnode = "https://yveskalume.hashnode.dev/"
             )
         )

@@ -3,13 +3,12 @@ CREATE TABLE creator(
     name TEXT NOT NULL,
     bio TEXT NOT NULL,
     photo TEXT,
-    twitter TEXT,
     hashnode TEXT,
     medium TEXT
 );
 
 add:
-INSERT INTO creator(name,bio,photo,twitter,hashnode,medium) VALUES (?,?,?,?,?,?);
+INSERT INTO creator(name,bio,photo,hashnode,medium) VALUES (?,?,?,?,?);
 
 getAll:
 SELECT * FROM creator;

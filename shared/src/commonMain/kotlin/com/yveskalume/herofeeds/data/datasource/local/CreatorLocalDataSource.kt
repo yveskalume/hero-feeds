@@ -18,7 +18,6 @@ class CreatorLocalDataSource(private val database: Database) {
                 name = creator.name,
                 bio = creator.bio,
                 photo = creator.photo,
-                twitter = creator.twitter,
                 hashnode = creator.hashnode,
                 medium = creator.medium
             )

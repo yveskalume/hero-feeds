@@ -14,14 +14,13 @@ class AddCreatorViewModel(private val creatorRepository: CreatorRepository) : Ba
     private val _uiState: MutableStateFlow<AddCreatorUiState> = MutableStateFlow(AddCreatorUiState.Idle)
     val uiState: StateFlow<AddCreatorUiState> = _uiState.asStateFlow()
 
-    fun addCreator(name: String, bio: String, twitter: String, hashnode: String, medium: String) {
+    fun addCreator(name: String, bio: String, hashnode: String, medium: String) {
         coroutineScope.launch {
             _uiState.emit(AddCreatorUiState.Loading)
             try {
                 val creator = Creator(
                     id = 0, name = name,
                     bio = bio,
-                    twitter = twitter.ifBlank { null },
                     hashnode = hashnode.ifBlank { null },
                     medium = medium.ifBlank { null },
                     photo = null

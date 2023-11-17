@@ -51,7 +51,7 @@ fun AddCreatorRoute(
 fun AddCreatorScreen(
     uiState: AddCreatorUiState,
     onNavigateBack: () -> Unit,
-    onSubmit: (name: String, bio: String, twitter: String, hashnode: String, medium: String) -> Unit
+    onSubmit: (name: String, bio: String, hashnode: String, medium: String) -> Unit
 ) {
 
     LaunchedEffect(uiState) {
@@ -66,10 +66,6 @@ fun AddCreatorScreen(
     }
 
     var bio by remember {
-        mutableStateOf("")
-    }
-
-    var twitter by remember {
         mutableStateOf("")
     }
 
@@ -118,15 +114,6 @@ fun AddCreatorScreen(
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(text = "Android Developer")
-                })
-
-            Text(text = "X (Twitter)")
-            OutlinedTextField(
-                value = twitter,
-                onValueChange = { twitter = it },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = {
-                    Text(text = "kalumeyves")
                 }
             )
 
@@ -153,10 +140,10 @@ fun AddCreatorScreen(
             Button(
                 enabled = name.isNotBlank()
                         && bio.isNotBlank()
-                        && (twitter.isNotBlank() || hashnode.isNotBlank() || medium.isNotBlank())
+                        && (hashnode.isNotBlank() || medium.isNotBlank())
                         && uiState !is AddCreatorUiState.Loading,
                 onClick = {
-                    onSubmit(name, bio, twitter, hashnode, medium)
+                    onSubmit(name, bio, hashnode, medium)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -176,6 +163,6 @@ private fun AddCreatorScreenPreview() {
         AddCreatorScreen(
             uiState = AddCreatorUiState.Idle,
             onNavigateBack = {},
-            onSubmit = { _, _, _, _, _ -> })
+            onSubmit = { _, _, _, _ -> })
     }
 }
