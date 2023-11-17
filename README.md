@@ -19,8 +19,8 @@ For platforms without an API neither RSS feeds, We can create a web crawler to f
 
 - [x] Add creator
 - [x] Fetch hashnode posts
-- [] Edit creator
-- [] Delete creator
-- [] Fetch medium posts
-- [] Fetch dev.to posts
+- [ ] Edit creator
+- [ ] Delete creator
+- [ ] Fetch medium posts
+- [ ] Fetch dev.to posts
 
